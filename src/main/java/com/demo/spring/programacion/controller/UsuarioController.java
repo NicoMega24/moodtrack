@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.spring.programacion.dto.usuario.UsuarioCreateDto;
 import com.demo.spring.programacion.dto.usuario.UsuarioDto;
+import com.demo.spring.programacion.dto.usuario.UsuarioResumenDto;
 import com.demo.spring.programacion.service.usuario.UsuarioService;
 
 @RestController
@@ -56,5 +57,10 @@ public class UsuarioController {
         return ResponseEntity.ok( usuarioCreado );
     }
 
+    @GetMapping("/{id}/resumen")
+    public ResponseEntity<UsuarioResumenDto> obtenerResumen(@PathVariable Long id) {
+        UsuarioResumenDto resumen = usuarioService.obtenerResumenUsuario(id);
+        return ResponseEntity.ok(resumen);
+    }
 
 }

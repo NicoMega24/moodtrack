@@ -6,9 +6,11 @@ import java.util.UUID;
 
 import com.demo.spring.programacion.dto.usuario.UsuarioCreateDto;
 import com.demo.spring.programacion.dto.usuario.UsuarioDto;
+import com.demo.spring.programacion.dto.usuario.UsuarioResumenDto;
 
 public interface UsuarioService {
     List<UsuarioDto> obtenerTodos();
     Optional<UsuarioDto> obtenerPorId(UUID id);
     UsuarioDto crearUsuario(UsuarioCreateDto usuarioCreateDto);
+    UsuarioResumenDto obtenerResumenUsuario(Long id);
 }
