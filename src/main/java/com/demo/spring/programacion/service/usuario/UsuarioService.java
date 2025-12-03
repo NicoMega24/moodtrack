@@ -12,5 +12,5 @@ public interface UsuarioService {
     List<UsuarioDto> obtenerTodos();
     Optional<UsuarioDto> obtenerPorId(UUID id);
     UsuarioDto crearUsuario(UsuarioCreateDto usuarioCreateDto);
-    UsuarioResumenDto obtenerResumenUsuario(Long id);
+    UsuarioResumenDto obtenerResumenUsuario(UUID id);
 }

@@ -1,11 +1,11 @@
 package com.demo.spring.programacion.service.usuario;
 
-import java.lang.System.Logger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
+
     private final UsuarioRepository usuarioRepository;
 
     @Autowired
@@ -33,45 +34,38 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<UsuarioDto> obtenerTodos() {
         List<Usuario> usuarioList = usuarioRepository.findAll();
-
-        return UsuarioMapper.toDtoList( usuarioList );
+        return UsuarioMapper.toDtoList(usuarioList);
     }
 
     @Override
     public Optional<UsuarioDto> obtenerPorId(UUID id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if (usuario.isPresent()) {
-            Usuario usuarioEntity = usuario.get();
-            return Optional.of( UsuarioMapper.toDto(usuarioEntity) );
-        }
-        return Optional.empty();
+        return usuarioRepository.findById(id)
+                .map(UsuarioMapper::toDto);
     }
 
     @Override
     public UsuarioDto crearUsuario(UsuarioCreateDto usuarioCreateDto) {
-        Usuario usuario = UsuarioMapper.toEntity( usuarioCreateDto );
-        usuario = usuarioRepository.save( usuario );
-        return UsuarioMapper.toDto( usuario );
+        Usuario usuario = UsuarioMapper.toEntity(usuarioCreateDto);
+        usuario = usuarioRepository.save(usuario);
+        return UsuarioMapper.toDto(usuario);
     }
 
     @Override
-    public UsuarioResumenDto obtenerResumenUsuario(Long id) {
+    public UsuarioResumenDto obtenerResumenUsuario(UUID id) {
+
         log.info("Construyendo resumen para el usuario {}", id);
 
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        // Datos básicos
         String nombre = usuario.getNombre();
         String email = usuario.getEmail();
-        String colorFavorito = usuario.getPerfilUsuario().getColorFavorito();
+        String colorFavorito = usuario.getPerfil().getColorFavorito();
 
-        // Cantidad de entradas
-        Long cantidad = usuario.getEntradas().stream().count();
+        Long cantidadEntradas = usuario.getEntradasDiarias().stream().count();
 
-        // Última fecha
-        var ultima = usuario.getEntradas().stream()
-                .map(e -> e.getFecha())  // suponiendo que EntradaDiaria tiene getFecha()
+        LocalDate ultimaEntrada = usuario.getEntradasDiarias().stream()
+                .map(e -> e.getFecha())
                 .max(LocalDate::compareTo)
                 .orElse(null);
 
@@ -79,8 +73,8 @@ public class UsuarioServiceImpl implements UsuarioService {
                 nombre,
                 email,
                 colorFavorito,
-                cantidad,
-                ultima
-            );
-        }
+                cantidadEntradas,
+                ultimaEntrada
+        );
+    }
 }

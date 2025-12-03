@@ -58,7 +58,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}/resumen")
-    public ResponseEntity<UsuarioResumenDto> obtenerResumen(@PathVariable Long id) {
+    public ResponseEntity<UsuarioResumenDto> obtenerResumen(@PathVariable UUID id) {
         UsuarioResumenDto resumen = usuarioService.obtenerResumenUsuario(id);
         return ResponseEntity.ok(resumen);
     }
