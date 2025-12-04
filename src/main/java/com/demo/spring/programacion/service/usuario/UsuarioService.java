@@ -9,8 +9,10 @@ import com.demo.spring.programacion.dto.usuario.UsuarioDto;
 import com.demo.spring.programacion.dto.usuario.UsuarioResumenDto;
 
 public interface UsuarioService {
-    List<UsuarioDto> obtenerTodos();
+    List<UsuarioDto> obtenerTodos(String nombre, String email, String colorFavorito);
     Optional<UsuarioDto> obtenerPorId(UUID id);
     UsuarioDto crearUsuario(UsuarioCreateDto usuarioCreateDto);
+    UsuarioDto updateUsuario(UUID id, UsuarioCreateDto usuarioCreateDto);
+    boolean eliminarUsuario(UUID id);
     UsuarioResumenDto obtenerResumenUsuario(UUID id);
 }
